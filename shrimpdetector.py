@@ -1,4 +1,5 @@
 import tkinter as tk
+import winsound
 from dataclasses import dataclass
 
 @dataclass
@@ -11,6 +12,7 @@ class Config:
     POPUP_WIDTH: int = 1000
     POPUP_HEIGHT: int = 700
     POPUP_IMAGE_PATH: str = "assets/getlobstered.png"
+    SOUNDFX_PATH: str = "assets/lobstersfx.wav"
 
 def setup_window(window, title, width, height, resizable=False):
     window.title(title)
@@ -50,6 +52,7 @@ def create_widgets(window):
 
 def open_popup():
     popup = tk.Toplevel()
+    winsound.PlaySound(Config.SOUNDFX_PATH, winsound.SND_FILENAME | winsound.SND_ASYNC)
     setup_window(popup, Config.POPUP_TITLE, Config.POPUP_WIDTH, Config.POPUP_HEIGHT, resizable=False)
     setup_background(popup, Config.POPUP_IMAGE_PATH)
 

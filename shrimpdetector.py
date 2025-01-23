@@ -1,9 +1,16 @@
 import tkinter as tk
+from dataclasses import dataclass
 
-WINDOW_TITLE = "Shrimpnator3000"
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
-BG_IMAGE_PATH = "assets/bg.png"
+@dataclass
+class Config:
+    WINDOW_TITLE: str = "Shrimpnator3000"
+    WINDOW_WIDTH: int = 800
+    WINDOW_HEIGHT: int = 600
+    BG_IMAGE_PATH: str = "assets/bg.png"
+    POPUP_TITLE: str = "GET SHRIMPED !!!!1"
+    POPUP_WIDTH: int = 1000
+    POPUP_HEIGHT: int = 700
+    POPUP_IMAGE_PATH: str = "assets/getlobstered.png"
 
 def center_window(window, width, height):
     screen_width = window.winfo_screenwidth()
@@ -12,6 +19,11 @@ def center_window(window, width, height):
     y = (screen_height - height) // 2
     window.geometry(f"{width}x{height}+{x}+{y}")
 
+def setup_window(window, title, width, height, resizable=False):
+    window.title(title)
+    center_window(window, width, height)
+    window.resizable(resizable, resizable)
+
 def setup_background(window, image_path):
     bg_image = tk.PhotoImage(file=image_path)
     background_label = tk.Label(window, image=bg_image)
@@ -19,15 +31,14 @@ def setup_background(window, image_path):
     window.bg_image = bg_image  # Keep a reference to avoid garbage collection
 
 def setup_layout(window):
-    """Configures grid layout."""
-    window.grid_rowconfigure(0, weight=1)  # Text 'div'
-    window.grid_rowconfigure(1, weight=1)  # Spacer
-    window.grid_rowconfigure(2, weight=1)  # Buttons 'div'
-    window.grid_columnconfigure(0, weight=1)  # Left button
-    window.grid_columnconfigure(1, weight=1)  # Right button
+    configure_grid(window, 3, 2)
+def configure_grid(window, rows, columns):
+    for i in range(rows):
+        window.grid_rowconfigure(i, weight=1)
+    for j in range(columns):
+        window.grid_columnconfigure(j, weight=1)
 
 def create_widgets(window):
-    """Creates and places all widgets."""
     text_label = tk.Label(window, text="Art thou a Shrimp?", font=("Arial", 16, "bold"))
     text_label.place(relx=0.5, rely=0.1, anchor="center")
 
@@ -39,8 +50,8 @@ def create_widgets(window):
 
 def open_popup():
     popup = tk.Toplevel()
-    popup.title("GET SHRIMPED !!!!1")
-    popup.geometry("1000x700")
+    setup_window(popup, Config.POPUP_TITLE, Config.POPUP_WIDTH, Config.POPUP_HEIGHT, resizable=False)
+    setup_background(popup, Config.POPUP_IMAGE_PATH)
 
 def restart_window(window):
     window.destroy()
@@ -48,14 +59,10 @@ def restart_window(window):
 
 def main():
     window = tk.Tk()
-    window.title(WINDOW_TITLE)
-    center_window(window, WINDOW_WIDTH, WINDOW_HEIGHT)
-    window.resizable(False, False)
-
-    bg_image = setup_background(window, BG_IMAGE_PATH)
+    setup_window(window, Config.WINDOW_TITLE, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT)
+    setup_background(window, Config.BG_IMAGE_PATH)
     setup_layout(window)
     create_widgets(window)
-
     window.mainloop()
 
 if __name__ == "__main__":
